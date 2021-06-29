@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  retrieveTutorials,
-  findTutorialsByTitle,
-  deleteAllTutorials,
-} from "../actions/tutorials";
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { useDispatch, useSelector } from "react-redux";
+// import {
+//   retrieveTutorials,
+//   findTutorialsByTitle,
+//   deleteAllTutorials,
+// } from "../../actions/tutorials";
 
 const Boost = (props) => {
   const mediaMatch = window.matchMedia('(min-width: 768px)');
@@ -36,7 +34,7 @@ const Boost = (props) => {
           <h3 className={""} style={styles.txtTitle(matches)}>
             Get more with our Boost technology
           </h3>
-          <img src="/assets/images/boost.png" style={styles.boostImg(matches)}/>
+          <img src="/assets/images/boost.png" style={styles.boostImg(matches)} alt=""/>
         </div>
       </div>
     
@@ -97,7 +95,7 @@ const styles = {
     textAlign: 'center',
     width: isRowBased ? "40vw" : "80vw",
     letterSpacing: "-0.33px",
-    marginBottom: isRowBased ? "7vw" : "14vw",
+    marginBottom: isRowBased ? "5vw" : "10vw",
   }),
   txtPhase: isRowBased => ({
     fontFamily: "Poppins",
@@ -105,8 +103,9 @@ const styles = {
     marginBottom: isRowBased ? "3vw" : "6vw",
   }),
   boostImg: isRowBased => ({
-    width: isRowBased ? "26vw" : "52vw",
+    width: "40%",
     // height: isRowBased ? "40vw" : "60vw",
+    ObjectFit: 'contain',
     alignSelf: 'center',
     // aspectRatio: '1/1',
   }),

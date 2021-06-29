@@ -6,9 +6,24 @@ import "./App.css";
 // import AddTutorial from "./components/AddTutorial";
 // import Tutorial from "./components/Tutorial";
 // import TutorialsList from "./components/TutorialsList";
-import MapRoute from "./pages/MapRoute";
-import Boost from "./pages/Boost";
-import AddWayPoint from "./pages/AddWayPoint";
+// import MapRoute from "./pages/offerRide/MapRoute";
+import {
+  MapRoute,
+  ReturnRoute,
+  Boost,
+  AddWayPoint,
+  ViewMap,
+  PickupTime,
+  ReturnPickupTime,
+  Passengers,
+  PricePerSeat,
+  ComeBack,
+  AnyOther
+} from "./pages/offerRide";
+
+import {
+  FindRideMain,
+} from "./pages/findRide";
 
 function App() {
   return (
@@ -39,6 +54,16 @@ function App() {
           {/* <Route path="/tutorials/:id" component={Tutorial} /> */}
           <Route path="/boost" component={Boost} />
           <Route path="/addwaypoint" component={AddWayPoint} />
+          <Route path="/viewmap" component={ViewMap} />
+          <Route path="/pickuptime" component={PickupTime} />
+          <Route path="/returnpickuptime" component={ReturnPickupTime} />
+          <Route path="/passengers" component={Passengers} />
+          <Route path="/priceperseat" component={PricePerSeat} />
+          <Route path="/comeback" component={ComeBack} />
+          <Route path="/anyother" component={AnyOther} />
+          <Route path="/returnroute" component={ReturnRoute} />
+
+          <Route path="/findride" component={FindRideMain} />
         </Switch>
       </div>
     </Router>

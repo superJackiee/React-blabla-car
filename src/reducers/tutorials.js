@@ -14,14 +14,14 @@ const tutorialReducer = (tutorials = initialState, action) => {
 
   switch (type) {
     case CREATE_TUTORIAL:
-      return [...tutorials, payload];
+      return [...tutorials, {id: tutorials.length, ...payload}];
 
     case RETRIEVE_TUTORIALS:
       return payload;
 
     case UPDATE_TUTORIAL:
       return tutorials.map((tutorial) => {
-        if (tutorial.id === payload.id) {
+        if (tutorial.title === payload.title) {
           return {
             ...tutorial,
             ...payload,

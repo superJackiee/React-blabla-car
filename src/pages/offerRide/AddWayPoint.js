@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  retrieveTutorials,
-  findTutorialsByTitle,
-  deleteAllTutorials,
-} from "../actions/tutorials";
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { useDispatch, useSelector } from "react-redux";
+// import {
+//   retrieveTutorials,
+//   findTutorialsByTitle,
+//   deleteAllTutorials,
+// } from "../../actions/tutorials";
+import Timeline from '@material-ui/lab/Timeline';
+import TimelineItem from '@material-ui/lab/TimelineItem';
+import TimelineSeparator from '@material-ui/lab/TimelineSeparator';
+import TimelineConnector from '@material-ui/lab/TimelineConnector';
+import TimelineContent from '@material-ui/lab/TimelineContent';
+import TimelineDot from '@material-ui/lab/TimelineDot';
 
 const AddWayPoint = (props) => {
-  const [currentTutorial, setCurrentTutorial] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(-1);
-  const [searchTitle, setSearchTitle] = useState("");
+  // const [currentTutorial, setCurrentTutorial] = useState(null);
+  // const [currentIndex, setCurrentIndex] = useState(-1);
+  // const [searchTitle, setSearchTitle] = useState("");
   const mediaMatch = window.matchMedia('(min-width: 768px)');
   const [matches, setMatches] = useState(mediaMatch.matches);
 
@@ -21,40 +25,30 @@ const AddWayPoint = (props) => {
     return () => mediaMatch.removeListener(handler);
   });
 
-  const tutorials = useSelector(state => state.tutorials);
-  const dispatch = useDispatch();
+  // const tutorials = useSelector(state => state.tutorials);
+  // const dispatch = useDispatch();
 
-  useEffect(() => {
+  // useEffect(() => {
     // dispatch(retrieveTutorials());
-  }, []);
+  // }, []);
 
-  const onChangeSearchTitle = e => {
-    const searchTitle = e.target.value;
-    setSearchTitle(searchTitle);
-  };
-
-  const refreshData = () => {
-    setCurrentTutorial(null);
-    setCurrentIndex(-1);
-  };
-
-  const setActiveTutorial = (tutorial, index) => {
-    setCurrentTutorial(tutorial);
-    setCurrentIndex(index);
-  };
+  // const setActiveTutorial = (tutorial, index) => {
+  //   setCurrentTutorial(tutorial);
+  //   setCurrentIndex(index);
+  // };
 
   const btnContinueHandler = () => {
-    props.history.push("/boost");
+    props.history.push("/pickuptime");
   };
 
-  const findByTitle = () => {
-    refreshData();
-    // dispatch(findTutorialsByTitle(searchTitle));
+  const btnViewMapHandler = () => {
+    props.history.push("/viewmap");
   };
+
 
   return (
     <div className="list row mw-100">
-      <div className={"col-md-6 d-flex" + (matches ? " flex-row-reverse" : "")}>
+      <div className={"col-md-6"}>
         <div className="text-center" style={styles.leftContainer(matches)}
         >
           <h5 className={""} style={styles.txtTitle(matches)}>
@@ -91,7 +85,7 @@ const AddWayPoint = (props) => {
             <div className="" style={styles.hDivider} />
             <li
               className={ "list-group-item active" }
-              onClick={() => setActiveTutorial(0)}
+              // onClick={() => setActiveTutorial(0)}
               key={0}
               style={styles.lstRoutes(matches)}
             >
@@ -106,8 +100,8 @@ const AddWayPoint = (props) => {
             <div className="" style={styles.hDivider} />
             <li
               className={ "list-group-item active" }
-              onClick={() => setActiveTutorial(0)}
-              key={0}
+              // onClick={() => setActiveTutorial(0)}
+              key={1}
               style={styles.lstRoutes(matches)}
             >
               Manchester picadilly
@@ -129,9 +123,60 @@ const AddWayPoint = (props) => {
         </div>
       </div>
       
-      <div className="col-md-6 p-0" style={styles.rightContainer(matches)}>
-        
+      <div className="col-md-6 p-0">
+        <div className="d-flex justify-content-around" style={styles.rightContainer(matches)}>
+          <div style={styles.timelineContainer(matches)}>
+            <Timeline>
+              <TimelineItem style={styles.timelineItem(matches)}>
+                <TimelineSeparator>
+                  <TimelineDot />
+                  <TimelineConnector />
+                </TimelineSeparator>
+                <TimelineContent>Munich</TimelineContent>
+              </TimelineItem>
+              <TimelineItem style={styles.timelineItem(matches)}>
+                <TimelineSeparator>
+                  <TimelineDot />
+                  <TimelineConnector />
+                </TimelineSeparator>
+                <TimelineContent>Chandragiri</TimelineContent>
+              </TimelineItem>
+              <TimelineItem style={styles.timelineItem(matches)}>
+                <TimelineSeparator>
+                  <TimelineDot />
+                  <TimelineConnector />
+                </TimelineSeparator>
+                <TimelineContent>Manchester</TimelineContent>
+              </TimelineItem>
+              <TimelineItem style={styles.timelineItem(matches)}>
+                <TimelineSeparator>
+                  <TimelineDot />
+                </TimelineSeparator>
+                <TimelineContent>Zürich</TimelineContent>
+              </TimelineItem>
+            </Timeline>
+          </div>
+          <div className="d-flex justify-content-center">
+            <button
+              className="btn btn-sm"
+              style={styles.btnViewMap(matches)}
+              onClick={btnViewMapHandler}
+            >
+              View map
+            </button>
+          </div>
+        </div>
       </div>
+      
+      <svg className="backBubble1" version="1.1">
+        <circle cx="380" cy="120" r="200"
+          fill="#EEF4FF"/>
+      </svg>
+      
+      <svg className="backBubble2" version="1.1">
+        <circle cx="180" cy="490" r="480"
+          fill="rgba(0, 174, 239, 0.44)"/>
+      </svg>
     </div>
   );
 };
@@ -141,26 +186,23 @@ const styles = {
     border: "1px solid #707070", 
     padding: "7%",
     width: isRowBased ? "35vw" : "70vw",
-    height: isRowBased ? "40vw" : "80vw",
-    margin: isRowBased ? "initial":"auto",
+    // height: isRowBased ? "40vw" : "80vw",
+    marginRight: isRowBased ? "0":"auto",
+    marginLeft: "auto",
     marginTop: isRowBased ? "12vh" : "12vh",
     marginBottom: isRowBased ? "12vh" : "12vh",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-evenly",
-    borderRadius: "3vw"}),
+    borderRadius: "3vw",
+    backgroundColor: "white",
+  }),
   rightContainer: isRowBased => ({ 
-    // border: "1px solid #707070", 
-    // padding: "7%",
-    width: isRowBased ? "50vw" : "100vw",
-    height: isRowBased ? "100vh" : "50vh",
-    backgroundColor: 'yellow',
-    // margin: isRowBased ? "auto" : "10vh auto",
-    // display: "flex",
-    // alignSelf: "flex-end",
-    // flexDirection: "column",
-    // justifyContent: "space-evenly",
-    // borderRadius: "59px"
+    border: "1px solid #C4C4C4", 
+    padding: "0 4%",
+    width: isRowBased ? "25vw" : "50vw",
+    // height: isRowBased ? "100vh" : "50vh",
+    borderRadius: "2vw",
+    margin: isRowBased ? "auto" : "10vh auto",
+    marginTop: isRowBased ? "12vh" : "12vh",
+    backgroundColor: "white",
   }),
   icSearch: isRowBased => ({ 
     fontSize: isRowBased ? "2vw" : "4vw",
@@ -187,7 +229,7 @@ const styles = {
     height: "1px",
   },
   lstContainer: {
-    marginBottom: "3em",
+    marginBottom: "1vw",
   },
   lstRoutes: isRowBased => ({
     backgroundColor: 'transparent',
@@ -213,7 +255,7 @@ const styles = {
     border: '1px solid #00AEEF',
     borderRadius: '50%',
     // backgroundColor: '#00AEEF',
-    '-webkit-appearance': 'none',
+    WebkitAppearance: 'none',
     outline: 'none',
     cursor: 'pointer',
   }),
@@ -237,6 +279,18 @@ const styles = {
     fontSize: isRowBased ? "1vw" : "2vw",
     marginBottom: isRowBased ? "3vw" : "6vw",
   }),
+  btnViewMap: isRowBased => ({
+    height: isRowBased ? "2.5vw" : "5vw",
+    width: "100%",
+    alignSelf: 'center',
+    borderRadius: "2em",
+    color: "#FFF",
+    padding: '0 0.8rem',
+    backgroundColor: "#00AEEF",
+    fontFamily: "Poppins",
+    fontSize: isRowBased ? "1vw" : "2vw",
+    // marginBottom: isRowBased ? "3vw" : "6vw",
+  }),
   txtTitle: isRowBased => ({
     fontFamily: "Montserrat",
     fontSize: isRowBased ? "2vw" : "4vw",
@@ -246,6 +300,15 @@ const styles = {
   txtPhase: isRowBased => ({
     fontFamily: "Poppins",
     fontSize: isRowBased ? "1vw" : "2vw",
+  }),
+  timelineContainer: isRowBased => ({
+    marginTop: "2vw",
+    marginLeft: "-2rem",
+    fontSize: isRowBased ? "1vw" : "2vw",
+  }),
+  timelineItem: isRowBased => ({
+    alignSelf: 'flex-start',
+    minHeight: isRowBased ? '5vw' : '10vw',
   }),
 }
 

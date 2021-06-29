@@ -1,20 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch,
+  //  useSelector
+   } from "react-redux";
 import {
-  retrieveTutorials,
-  findTutorialsByTitle,
-  deleteAllTutorials,
-} from "../actions/tutorials";
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Map from '../components/Map.js';
+  createTutorial, deleteAllTutorials,
+} from "../../actions/tutorials";
+import Paper from '@material-ui/core/Paper';
+import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import Radio from '@material-ui/core/Radio';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Map from '../../components/Map.js';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#00AEEF',
+    },
+    secondary: {
+      main: '#F57F20',
+    },
+  },
+});
 
 const MapRoute = (props) => {
-  const [currentTutorial, setCurrentTutorial] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(-1);
-  const [searchTitle, setSearchTitle] = useState("");
   const mediaMatch = window.matchMedia('(min-width: 768px)');
   const [matches, setMatches] = useState(mediaMatch.matches);
+  const [curRoute, setCurRoute] = React.useState("0");
+  const [routes, setRoutes] = React.useState([]);
+  const classes = useStyles();
 
   useEffect(() => {
     const handler = e => setMatches(e.matches);
@@ -22,40 +37,28 @@ const MapRoute = (props) => {
     return () => mediaMatch.removeListener(handler);
   });
 
-  const tutorials = useSelector(state => state.tutorials);
+  // const tutorials = useSelector(state => state.tutorials);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // dispatch(retrieveTutorials());
-  }, []);
+    dispatch(deleteAllTutorials());
+    dispatch(createTutorial('start', 'ChIJ2V-Mo_l1nkcRfZixfUq4DAE'));
+    dispatch(createTutorial('end', 'ChIJGaK-SZcLkEcRA9wf5_GNbuY'));
+    dispatch(createTutorial('route', 0));
+  });
 
-  const onChangeSearchTitle = e => {
-    const searchTitle = e.target.value;
-    setSearchTitle(searchTitle);
-  };
-
-  const refreshData = () => {
-    setCurrentTutorial(null);
-    setCurrentIndex(-1);
-  };
-
-  const setActiveTutorial = (tutorial, index) => {
-    setCurrentTutorial(tutorial);
-    setCurrentIndex(index);
+  const handleRadioChange = (event) => {
+    setCurRoute(event.target.value);
   };
 
   const btnContinueHandler = () => {
     props.history.push("/boost");
   };
 
-  const findByTitle = () => {
-    refreshData();
-    // dispatch(findTutorialsByTitle(searchTitle));
-  };
-
   return (
     <div className="list row mw-100">
       <div className="col-md-6 d-flex">
+      <ThemeProvider theme={theme}>
         <div className="text-center" style={styles.leftContainer(matches)}
         >
           <h5 className={""} style={styles.txtTitle(matches)}>Pick-up</h5>
@@ -68,18 +71,6 @@ const MapRoute = (props) => {
               placeholder="Enter an origin location"
               style={styles.inputSearch(matches)} /> */}
             <select id="start" className="form-control" style={styles.inputSearch(matches)}>
-              {/* <option value="chicago, il">Chicago</option>
-              <option value="st louis, mo">St Louis</option>
-              <option value="joplin, mo">Joplin, MO</option>
-              <option value="oklahoma city, ok">Oklahoma City</option>
-              <option value="amarillo, tx">Amarillo</option>
-              <option value="gallup, nm">Gallup, NM</option>
-              <option value="flagstaff, az">Flagstaff, AZ</option>
-              <option value="winona, az">Winona</option>
-              <option value="kingman, az">Kingman</option>
-              <option value="barstow, ca">Barstow</option>
-              <option value="san bernardino, ca">San Bernardino</option>
-              <option value="los angeles, ca">Los Angeles</option> */}
               <option value="ChIJ2V-Mo_l1nkcRfZixfUq4DAE">Munich, Germany</option>
               <option value="ChIJGaK-SZcLkEcRA9wf5_GNbuY">Zürich, Switzerland</option>
               <option value="ChIJgWsCh7C4VTcRwgRZ3btjpY8">Dhaka, Bangladesh</option>
@@ -97,19 +88,7 @@ const MapRoute = (props) => {
           <h5 className="" style={styles.txtTitle(matches)}>Drop-off</h5>
 
           <div className="input-group ">
-            <select id="end" className="form-control" style={styles.inputSearch(matches)}>
-              {/* <option value="chicago, il">Chicago</option>
-              <option value="st louis, mo">St Louis</option>
-              <option value="joplin, mo">Joplin, MO</option>
-              <option value="oklahoma city, ok">Oklahoma City</option>
-              <option value="amarillo, tx">Amarillo</option>
-              <option value="gallup, nm">Gallup, NM</option>
-              <option value="flagstaff, az">Flagstaff, AZ</option>
-              <option value="winona, az">Winona</option>
-              <option value="kingman, az">Kingman</option>
-              <option value="barstow, ca">Barstow</option>
-              <option value="san bernardino, ca">San Bernardino</option>
-              <option value="los angeles, ca">Los Angeles</option> */}
+            <select id="end" className="form-control" style={styles.inputSearch(matches)} defaultValue="ChIJGaK-SZcLkEcRA9wf5_GNbuY">
               <option value="ChIJ2V-Mo_l1nkcRfZixfUq4DAE">Munich, Germany</option>
               <option value="ChIJGaK-SZcLkEcRA9wf5_GNbuY">Zürich, Switzerland</option>
               <option value="ChIJgWsCh7C4VTcRwgRZ3btjpY8">Dhaka, Bangladesh</option>
@@ -131,23 +110,29 @@ const MapRoute = (props) => {
           <div className="" style={styles.hDivider} />
 
           <h5 className="" style={styles.txtTitle(matches)}>Whats your route?</h5>
-
-          <ul id="route-selector" className="list-group" style={styles.lstContainer}>
-            {tutorials &&
-              tutorials.map((tutorial, index) => (
-                <li
-                  className={
-                    "list-group-item " + (index === currentIndex ? "active" : "")
+          
+          <div className={classes.paneTwo} style={styles.radioContainer}>
+            <Paper square>
+              <FormControl component="fieldset">
+                <RadioGroup id="route-selector" aria-label="position" name="position"  value={curRoute} onChange={handleRadioChange}>
+                  {routes.length>0 ? routes.map((route, index)=>{
+                    return(
+                    <FormControlLabel
+                      data-index={index}
+                      value={""+index}
+                      key={index}
+                      control={<Radio name="position" color="primary" />}
+                      label={route}
+                      labelPlacement="start"
+                    />)
+                    })
+                    :
+                    <></>
                   }
-                  onClick={() => setActiveTutorial(tutorial, index)}
-                  key={index}
-                  style={styles.lstRoutes(matches)}
-                >
-                  {tutorial.title}
-                  <input type="radio" style={styles.btnRadio(matches)} onChange={() => {}} />
-                </li>
-              ))}
-          </ul>
+                </RadioGroup>
+              </FormControl>
+            </Paper>
+          </div>
 
           <button
             className="btn btn-sm"
@@ -157,10 +142,14 @@ const MapRoute = (props) => {
             Continue
           </button>
         </div>
+        </ThemeProvider>
       </div>
       
       <div className="col-md-6 p-0">
-        <Map />
+        <Map
+          onRouteChange={setRoutes}
+          currentRoute={curRoute}
+        />
       </div>
     </div>
   );
@@ -171,7 +160,7 @@ const styles = {
     border: "1px solid #707070", 
     padding: "7%",
     width: isRowBased ? "35vw" : "70vw",
-    height: isRowBased ? "70vh" : "75vh",
+    // height: isRowBased ? "70vh" : "75vh",
     margin: isRowBased ? "auto" : "10vh auto",
     display: "flex",
     flexDirection: "column",
@@ -201,28 +190,29 @@ const styles = {
     margin: "3vh auto",
     height: "1px",
   },
-  lstContainer: {
-    marginBottom: "3em",
+  radioContainer: {
+    margin: '3vw auto',
+    maxWidth: '100%',
   },
-  lstRoutes: isRowBased => ({
-    backgroundColor: 'transparent',
-    border: 'none',
-    fontSize: isRowBased ? '1vw' : "2vw",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    textAlign: "left",
-    alignSelf: "center",
-    height: "4em",
-    width: "80%",
-  }),
-  btnRadio: isRowBased => ({
-    minWidth: isRowBased ? "2vw" : "4vw",
-    minHeight: isRowBased ? "2vw" : "4vw",
-    width: isRowBased ? "2vw" : "4vw",
-    height: isRowBased ? "2vw" : "4vw",
-    backgroundColor: "#00AEEF",
-  }),
+  // lstRoutes: isRowBased => ({
+  //   backgroundColor: 'transparent',
+  //   border: 'none',
+  //   fontSize: isRowBased ? '1vw' : "2vw",
+  //   display: "flex",
+  //   justifyContent: "space-between",
+  //   alignItems: "center",
+  //   textAlign: "left",
+  //   alignSelf: "center",
+  //   height: "4em",
+  //   width: "80%",
+  // }),
+  // btnRadio: isRowBased => ({
+  //   minWidth: isRowBased ? "2vw" : "4vw",
+  //   minHeight: isRowBased ? "2vw" : "4vw",
+  //   width: isRowBased ? "2vw" : "4vw",
+  //   height: isRowBased ? "2vw" : "4vw",
+  //   backgroundColor: "#00AEEF",
+  // }),
   btnContinue: isRowBased => ({
     height: "4vh",
     width: "100%",
@@ -239,5 +229,52 @@ const styles = {
     letterSpacing: "-0.33px"
   }),
 }
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 200,
+  },
+  pane: {
+    flexGrow: 1,
+    backgroundColor: 'white',
+    padding: '0 10%',
+    borderRadius: '1.5vw',
+  },
+  paneTwo: {
+    flexGrow: 1,
+    backgroundColor: 'white',
+    '& div': {
+      borderBottom: 'none !important',
+    },
+    '& .MuiFormControl-root': {
+      width: '100%',
+    },
+    '& .MuiFormControlLabel-root': {
+      justifyContent: 'space-between',
+      maxWidth: '100%',
+    },
+    '& .MuiSvgIcon-root': {
+      width: '3vw',
+      height: '3vw',
+    },
+    '& .MuiRadio-root': {
+      color: '#00AEEF',
+    },
+    '& .MuiTypography-root': {
+      maxWidth: '90%',
+      overflowWrap: 'anywhere',
+      fontSize: '1.15vw',
+      fontFamily: 'Poppins',
+      textAlign: 'left',
+    },
+    borderRadius: '1.5vw',
+  },
+}));
 
 export default MapRoute;

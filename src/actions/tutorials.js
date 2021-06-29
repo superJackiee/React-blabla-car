@@ -10,14 +10,17 @@ import TutorialDataService from "../services/TutorialService";
 
 export const createTutorial = (title, description) => async (dispatch) => {
   try {
-    const res = await TutorialDataService.create({ title, description });
+    // const res = await TutorialDataService.create({ title, description });
 
     dispatch({
       type: CREATE_TUTORIAL,
-      payload: res.data,
+      payload: {
+        title,
+        description
+      },
     });
 
-    return Promise.resolve(res.data);
+    return Promise.resolve({});
   } catch (err) {
     return Promise.reject(err);
   }
@@ -66,14 +69,14 @@ export const deleteTutorial = (id) => async (dispatch) => {
 
 export const deleteAllTutorials = () => async (dispatch) => {
   try {
-    const res = await TutorialDataService.removeAll();
+    // const res = await TutorialDataService.removeAll();
 
     dispatch({
       type: DELETE_ALL_TUTORIALS,
-      payload: res.data,
+      payload: {},
     });
 
-    return Promise.resolve(res.data);
+    return Promise.resolve({});
   } catch (err) {
     return Promise.reject(err);
   }
@@ -86,6 +89,19 @@ export const findTutorialsByTitle = (title) => async (dispatch) => {
     dispatch({
       type: RETRIEVE_TUTORIALS,
       payload: res.data,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const updateTutorialsByTitle = (title, description) => async (dispatch) => {
+  try {
+    // const res = await TutorialDataService.findByTitle(title);
+
+    dispatch({
+      type: UPDATE_TUTORIAL,
+      payload: {title, description},
     });
   } catch (err) {
     console.log(err);
